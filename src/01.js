@@ -7,8 +7,7 @@ class TodoList extends React.Component{
     super(props);
     this.state={
       inputValue:'',
-      todolist:[],
-      donelist:[]
+      list:[],
     }
   }
 
@@ -27,12 +26,12 @@ class TodoList extends React.Component{
         </header>
 
         <div className="content">
-          <h1>未完成<span id="todocount">{this.state.todolist.length}</span></h1>
+          <h1>未完成<span id="todocount">{this.state.list.filter(item=>(item.flag === 0)).length}</span></h1>
           <ol id="todolist">
-            {this.state.todolist.map((item,index)=>{
+            {this.state.list.filter(item=>(item.flag === 0)).map((item,index)=>{
               return<li key={index}>
-                    <input type="checkbox" checked={false} onClick={(e)=>{this.handleCheck(index)}}></input>
-                    <p>{item}</p>
+                    <input type="checkbox" onClick={(e)=>{this.handleCheck(e,item)}}></input>
+                    <p>{item.content}</p>
                     <a  onClick={this.handleDelete.bind(this,index)}
                         href= "###"
                     >
@@ -40,13 +39,13 @@ class TodoList extends React.Component{
               </li>
             })}
           </ol>
-          <h1>已完成<span id="todocount">{this.state.donelist.length}</span></h1>
+          <h1>已完成<span id="donecount">{this.state.list.filter(item=>(item.flag === 1)).length}</span></h1>
           <ol id="donelist">
-            {this.state.donelist.map((item,index)=>{
+          {this.state.list.filter(item=>(item.flag === 1)).map((item,index)=>{
               return<li key={index}>
-                    <input type="checkbox" checked={true} onClick={(e)=>{this.handleCheck2(index)}}></input>
-                    <p>{item}</p>
-                    <a  onClick={this.handleDelete2.bind(this,index)}
+                    <input type="checkbox" onClick={(e)=>{this.handleCheck2(e,item)}}></input>
+                    <p>{item.content}</p>
+                    <a  onClick={this.handleDelete.bind(this,index)}
                         href= "###"
                     >
                     </a>
@@ -70,59 +69,42 @@ class TodoList extends React.Component{
 
   //修改内容的方法
   handleClick=()=>{
-    const {todolist,inputValue} = this.state;
+    const {list,inputValue} = this.state
     this.setState({
-      todolist:[...todolist,inputValue],
+      list:[...list,{ flag:0, content:inputValue}],
       inputValue:'',
     })
   }
-  // 按下按钮
-  handleCheck=(index)=>{
-    const todolist = [...this.state.todolist] ;
-    const donelist = [...this.state.donelist];
-    donelist.push(todolist[index]);
-    todolist.splice(index,1)
+  // 按下按钮 flag改变为1
+  handleCheck=(e,item)=>{
+    const list = this.state.list ;
+    console.log(item)
+    console.log(e)
     this.setState({
-      todolist:todolist,
-      donelist:donelist
+      list:list
     })
   }
-  // 按下按钮2
-  handleCheck2=(index)=>{
-    const todolist = [...this.state.todolist] ;
-    const donelist = [...this.state.donelist];
-    todolist.push(donelist[index]);
-    donelist.splice(index,1)
+  // 按下按钮 flag 变为0
+  handleCheck2=(e,item,)=>{
+    const list = this.state.list;
     this.setState({
-      todolist:todolist,
-      donelist:donelist
+      list:list
     })
   }
-
-  //删除1
+  //删除
   handleDelete=(index)=>{
-    const todolist =[...this.state.todolist];
-    todolist.splice(index,1)
+    const list =[...this.state.list];
+    list.splice(index,1)
     this.setState({
-      todolist:todolist
-    })
-  }
-  //删除2
-  handleDelete2=(index)=>{
-    const donelist =[...this.state.donelist];
-    donelist.splice(index,1)
-    this.setState({
-      donelist:donelist
+      list:list
     })
   }
 
   // 清除所有的方法
   clear(){
-    const todolist = [];
-    const donelist = []
+    const list = [];
     this.setState({
-      todolist:todolist,
-      donelist:donelist
+      list:list,
     })
   }
 
