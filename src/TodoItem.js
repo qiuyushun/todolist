@@ -7,7 +7,9 @@ class TodoItem extends React.Component(){
         super(props);
     }
     render(){
-        
+        <div className="content">
+
+        </div>
     }
 }
 
