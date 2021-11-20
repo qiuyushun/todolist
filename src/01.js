@@ -78,8 +78,6 @@ class TodoList extends React.Component{
   // 按下按钮 flag改变为1
   handleCheck=(e,item)=>{
     const list = this.state.list ;
-    console.log(item)
-    console.log(e)
     this.setState({
       list:list
     })

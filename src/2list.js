@@ -1,6 +1,5 @@
 import React from "react";
 import { Fragment } from "react/cjs/react.production.min";
-import TodoItem from "./TodoItem";
 import './TodoList.css';
 
 class TodoList extends React.Component{
@@ -21,7 +20,7 @@ class TodoList extends React.Component{
           <label>My todolist</label>
           <input type="text" id="add_list" name="add_list" placeholder="type here" required 
             value = {this.state.inputValue} 
-            onChange = {this.handleInputChange}
+            onChange = {this.handleInputChange.bind(this)}
           />
           <button id="sub" onClick={this.handleClick}>提交</button>
           </section>
@@ -30,34 +29,32 @@ class TodoList extends React.Component{
         <div className="content">
           <h1>未完成<span id="todocount">{this.state.todolist.length}</span></h1>
           <ol id="todolist">
-            {
-              this.state.todolist.map((item,index)=>{
-                return(
-                  <TodoItem 
-                    item={item} index={index}
-                    contentDelete={this.handleDelete}
-                    contentCheck={this.handleCheck}
-                  />
-                )
-              })
-            }
+            {this.state.todolist.map((item,index)=>{
+              return<li key={index}>
+                    <input type="checkbox" checked={false} onClick={(e)=>{this.handleCheck(e,item,index)}}></input>
+                    <p>{item}</p>
+                    <a  onClick={this.handleDelete.bind(this,index)}
+                        href= "###"
+                    >
+                    </a>
+              </li>
+            })}
           </ol>
-          <h1>已经完成<span id="donecount">{this.state.donelist.length}</span></h1>
+          <h1>已完成<span id="todocount">{this.state.donelist.length}</span></h1>
           <ol id="donelist">
-            {
-              this.state.donelist.map((item,index)=>{
-                return(
-                  <TodoItem 
-                    item={item} index={index}
-                    contentDelete={this.handleDelete2}
-                    contentCheck={this.handleCheck2}
-                  />
-                )
-              })
-            }
+            {this.state.donelist.map((item,index)=>{
+              return<li key={index}>
+                    <input type="checkbox" checked={true} onClick={(e)=>{this.handleCheck2(e,item,index)}}></input>
+                    <p>{item}</p>
+                    <a  onClick={this.handleDelete2.bind(this,index)}
+                        href= "###"
+                    >
+                    </a>
+              </li>
+            })}
           </ol>
         </div>
-
+        
         <div id="clear">
           <button id="clearbutton" onClick={this.clear.bind(this)}><h3>全部清除</h3></button>
         </div>
@@ -70,7 +67,7 @@ class TodoList extends React.Component{
     })
   }
 
-  //提交方法
+  //修改内容的方法
   handleClick=()=>{
     const {todolist,inputValue} = this.state;
     this.setState({
@@ -79,18 +76,19 @@ class TodoList extends React.Component{
     })
   }
   // 按下按钮
-  handleCheck=(item,index)=>{
+  handleCheck=(e,item,index)=>{
     const todolist = this.state.todolist;
     const donelist = this.state.donelist;
     donelist.push(item);
     todolist.splice(index,1)
+    console.log(e)
     this.setState({
       todolist:todolist,
       donelist:donelist
     })
   }
   // 按下按钮2
-  handleCheck2=(item,index)=>{
+  handleCheck2=(e,item,index)=>{
     const todolist = this.state.todolist;
     const donelist = this.state.donelist;
     todolist.push(item);
