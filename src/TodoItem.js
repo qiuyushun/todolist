@@ -1,14 +1,12 @@
 import React from "react";
 
 class TodoItem extends React.Component{
-
-
     render() {
       return (
-              <li key={this.props.index} >
-                    <input type="checkbox"  
-                          onClick={(e)=>{this.contentCheck(e,this.props.item,this.props.index)}}></input>
-                    <p>{this.props.item}</p>
+              <li>
+                    <input type="checkbox"  checked={this.props.item.checked} onChange={this.handleInputChange}
+                          onClick={(e)=>{this.props.contentCheck(this.props.item)}}></input>
+                    <p>{this.props.item.content}</p>
                     <a  onClick={this.contentDelete}
                         href= "###">
                     </a>
@@ -16,10 +14,13 @@ class TodoItem extends React.Component{
         );
     }
 
-    contentCheck=()=>{
-      this.props.contentCheck(this.props.item,this.props.index)
+    handleInputChange=(event)=>{
+      // const target = event.target;
+      // const checked = target.type ;
+      // console.log(checked);
+      // console.log(target)
+      // checked = this.props.item.checked;
     }
-
     contentDelete=()=>{
       this.props.contentDelete(this.props.index)
     }

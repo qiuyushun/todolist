@@ -1,13 +1,25 @@
 import React from "react";
 import { Fragment } from "react/cjs/react.production.min";
 import './TodoList.css';
+import TodoItem from "./TodoItem";
 
 class TodoList extends React.Component{
   constructor(props){
     super(props);
     this.state={
       inputValue:'',
-      list:[],
+      list:[
+        {
+          content:'吃饭',
+          flag:false
+        },{
+          content:'睡觉',
+          flag:false
+        },{
+          content:'打豆豆',
+          flag:true
+        }
+    ],
     }
   }
 
@@ -19,18 +31,18 @@ class TodoList extends React.Component{
           <label>My todolist</label>
           <input type="text" id="add_list" name="add_list" placeholder="type here" required 
             value = {this.state.inputValue} 
-            onChange = {this.handleInputChange.bind(this)}
+            onChange = {this.handleInputChange}
           />
           <button id="sub" onClick={this.handleClick}>提交</button>
           </section>
         </header>
 
         <div className="content">
-          <h1>未完成<span id="todocount">{this.state.list.filter(item=>(item.flag === 0)).length}</span></h1>
+          <h1>未完成<span id="todocount">{this.state.list.filter(item=>(item.flag === false)).length}</span></h1>
           <ol id="todolist">
-            {this.state.list.filter(item=>(item.flag === 0)).map((item,index)=>{
+            {this.state.list.filter(item=>(item.flag === false)).map((item,index)=>{
               return<li key={index}>
-                    <input type="checkbox" onClick={(e)=>{this.handleCheck(e,item)}}></input>
+                    <input type="checkbox" checked={item.flag} onClick={(e)=>{this.handleCheck(e,item)}}></input>
                     <p>{item.content}</p>
                     <a  onClick={this.handleDelete.bind(this,index)}
                         href= "###"
@@ -39,11 +51,11 @@ class TodoList extends React.Component{
               </li>
             })}
           </ol>
-          <h1>已完成<span id="donecount">{this.state.list.filter(item=>(item.flag === 1)).length}</span></h1>
+          <h1>已完成<span id="donecount">{this.state.list.filter(item=>(item.flag === true)).length}</span></h1>
           <ol id="donelist">
-          {this.state.list.filter(item=>(item.flag === 1)).map((item,index)=>{
+          {this.state.list.filter(item=>(item.flag === true)).map((item,index)=>{
               return<li key={index}>
-                    <input type="checkbox" onClick={(e)=>{this.handleCheck2(e,item)}}></input>
+                    <input type="checkbox" checked={item.flag} onClick={(e)=>{this.handleCheck(e,item)}}></input>
                     <p>{item.content}</p>
                     <a  onClick={this.handleDelete.bind(this,index)}
                         href= "###"
@@ -71,20 +83,14 @@ class TodoList extends React.Component{
   handleClick=()=>{
     const {list,inputValue} = this.state
     this.setState({
-      list:[...list,{ flag:0, content:inputValue}],
+      list:[...list,{ content:inputValue,flag:false }],
       inputValue:'',
     })
   }
-  // 按下按钮 flag改变为1
+  // 按下按钮 flag改变为true
   handleCheck=(e,item)=>{
     const list = this.state.list ;
-    this.setState({
-      list:list
-    })
-  }
-  // 按下按钮 flag 变为0
-  handleCheck2=(e,item,)=>{
-    const list = this.state.list;
+    item.flag = !item.flag 
     this.setState({
       list:list
     })

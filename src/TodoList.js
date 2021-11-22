@@ -1,15 +1,25 @@
 import React from "react";
 import { Fragment } from "react/cjs/react.production.min";
-import TodoItem from "./TodoItem";
 import './TodoList.css';
+import TodoItem from "./TodoItem";
 
 class TodoList extends React.Component{
   constructor(props){
     super(props);
     this.state={
       inputValue:'',
-      todolist:[],
-      donelist:[],
+      list:[
+        {
+          content:'吃饭',
+          checked:false
+        },{
+          content:'睡觉',
+          checked:false
+        },{
+          content:'打豆豆',
+          checked:true
+        }
+    ],
     }
   }
 
@@ -28,103 +38,75 @@ class TodoList extends React.Component{
         </header>
 
         <div className="content">
-          <h1>未完成<span id="todocount">{this.state.todolist.length}</span></h1>
+          <h1>未完成<span id="todocount">{this.state.list.filter(item=>(item.checked === false)).length}</span></h1>
           <ol id="todolist">
-            {
-              this.state.todolist.map((item,index)=>{
-                return(
-                  <TodoItem 
-                    item={item} index={index}
-                    contentDelete={this.handleDelete}
-                    contentCheck={this.handleCheck}
-                  />
-                )
-              })
-            }
+            {this.state.list.filter(item=>(item.checked === false)).map((item,index)=>{
+              return(
+                <TodoItem 
+                  item={item} index={index} key={index}
+                  contentDelete={this.handleDelete}
+                  contentCheck={this.handleCheck.bind(this,item)}
+                />
+              )
+            })}
           </ol>
-          <h1>已经完成<span id="donecount">{this.state.donelist.length}</span></h1>
+          <h1>已完成<span id="donecount">{this.state.list.filter(item=>(item.checked === true)).length}</span></h1>
           <ol id="donelist">
-            {
-              this.state.donelist.map((item,index)=>{
-                return(
-                  <TodoItem 
-                    item={item} index={index}
-                    contentDelete={this.handleDelete2}
-                    contentCheck={this.handleCheck2}
-                  />
+          {this.state.list.filter(item=>(item.checked === true)).map((item,index)=>{
+              return(
+                <TodoItem 
+                  item={item} index={index} key={index}
+                  contentDelete={this.handleDelete}
+                  contentCheck={this.handleCheck.bind(this,item)}
+                />
                 )
-              })
-            }
+            })}
           </ol>
         </div>
-
+        
         <div id="clear">
           <button id="clearbutton" onClick={this.clear.bind(this)}><h3>全部清除</h3></button>
         </div>
       </Fragment>
     );
   }
+
   handleInputChange=(e)=>{
     this.setState({
       inputValue: e.target.value
     })
   }
 
-  //提交方法
+  //修改内容的方法
   handleClick=()=>{
-    const {todolist,inputValue} = this.state;
+    const {list,inputValue} = this.state
     this.setState({
-      todolist:[...todolist,inputValue],
+      list:[...list,{ content:inputValue,checked:false }],
       inputValue:'',
     })
   }
-  // 按下按钮
-  handleCheck=(item,index)=>{
-    const todolist = this.state.todolist;
-    const donelist = this.state.donelist;
-    donelist.push(item);
-    todolist.splice(index,1)
+  // 按下按钮 flag取反
+  handleCheck=(e,item)=>{
+    const list = this.state.list ;
+    item.checked = !item.checked 
     this.setState({
-      todolist:todolist,
-      donelist:donelist
+      list:list
     })
   }
-  // 按下按钮2
-  handleCheck2=(item,index)=>{
-    const todolist = this.state.todolist;
-    const donelist = this.state.donelist;
-    todolist.push(item);
-    donelist.splice(index,1)
-    this.setState({
-      todolist:todolist,
-      donelist:donelist
-    })
-  }
-
-  //删除1
+  //删除
   handleDelete=(index)=>{
-    const todolist =[...this.state.todolist];
-    todolist.splice(index,1)
+    const list =[...this.state.list];
+    list.splice(index,1)
     this.setState({
-      todolist:todolist
-    })
-  }
-  //删除2
-  handleDelete2=(index)=>{
-    const donelist =[...this.state.donelist];
-    donelist.splice(index,1)
-    this.setState({
-      donelist:donelist
+      list:list
     })
   }
 
   // 清除所有的方法
   clear(){
-    const todolist = [];
-    const donelist = []
+    const list = [];
     this.setState({
-      todolist:todolist,
-      donelist:donelist
+      list:list,
     })
   }
 
