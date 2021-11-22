@@ -6,7 +6,7 @@ class TodoItem2 extends React.Component{
     render() {
       return (
               <li>
-                    <input type="checkbox"  checked={true}
+                    <input type="checkbox"  checked={true} onChange={this.handleInputChange}
                           onClick={(e)=>{this.contentCheck(this.props.item,this.props.index)}}></input>
                     <p>{this.props.item}</p>
                     <a  onClick={this.contentDelete}
@@ -14,6 +14,8 @@ class TodoItem2 extends React.Component{
                     </a>
               </li>
         );
+    }
+    handleInputChange=(event)=>{
     }
     contentCheck=()=>{
       this.props.contentCheck(this.props.item,this.props.index)

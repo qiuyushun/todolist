@@ -14,12 +14,8 @@ class TodoItem extends React.Component{
         );
     }
 
-    handleInputChange=(event)=>{
-      // const target = event.target;
-      // const checked = target.type ;
-      // console.log(checked);
-      // console.log(target)
-      // checked = this.props.item.checked;
+    handleInputChange=(e)=>{
+      this.props.item.checked = e.target.checked
     }
     contentDelete=()=>{
       this.props.contentDelete(this.props.index)
